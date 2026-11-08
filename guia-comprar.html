@@ -110,13 +110,18 @@
   <div class="card" id="card">
     <div class="formwrap">
       <h2>Receba o guia <em>gratuito.</em></h2>
-      <p class="hint">Deixe os seus dados e o download começa logo a seguir. Também lho envio por email.</p>
-      <form id="lead" novalidate>
+      <p class="hint">Deixe os seus dados, confirme que não é um robô e o download começa. Também lho envio por email.</p>
+      <form id="lead" action="https://formsubmit.co/eduardo.alves@zome.pt" method="POST" novalidate>
+        <input type="hidden" name="_subject" value="Novo lead: download do guia para COMPRAR">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_next" value="https://eduardo-alves21.github.io/eduardo-alves-imobiliario/guia-comprar.html?ok=1#card">
+        <input type="hidden" name="Origem" value="Guia da primeira casa">
+        <input type="hidden" name="_autoresponse" id="auto" value="">
         <p class="hp"><label>Não preencher: <input type="text" name="_honey" tabindex="-1" autocomplete="off"></label></p>
         <div class="f"><label for="nome">Nome</label><input id="nome" name="Nome" autocomplete="name" required></div>
         <div class="f"><label for="tel">Telemóvel</label><input id="tel" name="Telemóvel" type="tel" inputmode="tel" autocomplete="tel" pattern="[0-9 +]{9,16}" required></div>
         <div class="f"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required></div>
-        <label class="consent"><input type="checkbox" id="rgpd" required><span>Autorizo o Eduardo Alves (consultor Zome) a usar estes dados para me enviar o guia e me contactar sobre o tema. <a href="privacidade.html">Política de privacidade</a>.</span></label>
+        <label class="consent"><input type="checkbox" id="rgpd" name="Consentimento RGPD" value="Sim" required><span>Autorizo o Eduardo Alves (consultor Zome) a usar estes dados para me enviar o guia e me contactar sobre o tema. <a href="privacidade.html">Política de privacidade</a>.</span></label>
         <p class="err" id="err">Não consegui enviar agora — mas o seu guia já está a descarregar.</p>
         <button class="btn" type="submit" id="go">Descarregar o guia grátis <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12M6 11l6 6 6-6M5 20h14"/></svg></button>
         <div class="meta"><span>9 páginas · PDF</span><span>Sem spam</span></div>
@@ -144,25 +149,19 @@
 
 <script>
 (function(){
-  var f=document.getElementById('lead'),card=document.getElementById('card'),go=document.getElementById('go'),err=document.getElementById('err');
+  var f=document.getElementById('lead'),card=document.getElementById('card'),go=document.getElementById('go');
   var PDF='guias/guia-primeira-casa-eduardo-alves.pdf', FNAME='Guia-Primeira-Casa-Eduardo-Alves.pdf', LINK='https://eduardo-alves21.github.io/eduardo-alves-imobiliario/guias/guia-primeira-casa-eduardo-alves.pdf';
   function download(){var a=document.createElement('a');a.href=PDF;a.download=FNAME;document.body.appendChild(a);a.click();a.remove();}
+  // de volta do FormSubmit (depois da verificação): mostrar agradecimento e descarregar
+  if(/[?&]ok=1/.test(location.search)){ card.classList.add('done'); setTimeout(download,600); }
   f.addEventListener('submit',function(e){
     e.preventDefault();
     var bad=[].slice.call(f.querySelectorAll('input[required]')).filter(function(i){return !i.checkValidity()});
     if(bad.length){bad[0].reportValidity();return}
     if(f._honey.value) return;
-    go.disabled=true; go.firstChild.textContent='A preparar o seu guia… ';
-    var data={
-      "Nome":f.Nome.value,"Telemóvel":f['Telemóvel'].value,"email":f.email.value,
-      "Origem":"Guia da primeira casa","Consentimento RGPD":"Sim",
-      "_subject":"Novo lead: download do guia para COMPRAR","_template":"table","_captcha":"false",
-      "_autoresponse":"Olá "+f.Nome.value.split(' ')[0]+",\n\nObrigado por descarregar o guia «A sua primeira casa, sem surpresas». Se precisar de o abrir outra vez, está aqui:\n"+LINK+"\n\nSe tiver alguma dúvida sobre a compra — orçamento, apoios ou custos, basta responder a este email ou falar comigo pelo WhatsApp: 931 921 450. Estou disponível para ajudar, sem compromisso.\n\nEduardo Alves\nConsultor imobiliário · Zome · AMI 15325\nInstagram: @eduardoalves.imobiliario"
-    };
-    var finish=function(ok){ if(!ok) err.style.display='block'; card.classList.add('done'); download(); };
-    fetch('https://formsubmit.co/ajax/eduardo.alves@zome.pt',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)})
-      .then(function(r){return r.json()}).then(function(j){finish(String(j.success)==='true')})
-      .catch(function(){finish(false)});
+    document.getElementById('auto').value="Olá "+f.Nome.value.trim().split(' ')[0]+",\n\nObrigado por descarregar o guia «A sua primeira casa, sem surpresas». Se precisar de o abrir outra vez, está aqui:\n"+LINK+"\n\nSe tiver alguma dúvida sobre a compra — orçamento, apoios ou custos, basta responder a este email ou falar comigo pelo WhatsApp: 931 921 450. Estou disponível para ajudar, sem compromisso.\n\nEduardo Alves\nConsultor imobiliário · Zome · AMI 15325\nInstagram: @eduardoalves.imobiliario";
+    go.disabled=true; go.firstChild.textContent='A enviar… ';
+    f.submit();
   });
 })();
 </script>
