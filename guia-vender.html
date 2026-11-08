@@ -120,7 +120,6 @@
         <input type="hidden" name="_next" value="https://eduardo-alves21.github.io/eduardo-alves-imobiliario/guia-vender.html?ok=1#card">
         <input type="hidden" name="Origem" value="Guia para vender casa">
         <input type="hidden" name="_autoresponse" id="auto" value="">
-        <p class="hp"><label>Não preencher: <input type="text" name="_honey" tabindex="-1" autocomplete="off"></label></p>
         <div class="f"><label for="nome">Nome</label><input id="nome" name="Nome" autocomplete="name" required></div>
         <div class="f"><label for="tel">Telemóvel</label><input id="tel" name="Telemóvel" type="tel" inputmode="tel" autocomplete="tel" required></div>
         <div class="f"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required></div>
@@ -170,7 +169,6 @@
     mark(f.email,/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.value.trim()),'Escreva um email válido — é para lá que envio o guia.');
     mark(document.getElementById('rgpd'),document.getElementById('rgpd').checked,'');
     if(first){first.scrollIntoView({block:'center',behavior:'smooth'});if(first.type!=='checkbox')first.focus({preventScroll:true});return}
-    if(f._honey.value) return;
     document.getElementById('auto').value="Olá "+f.Nome.value.trim().split(' ')[0]+",\n\nObrigado por descarregar o guia «Vender a sua casa sem perder dinheiro nem tempo». Se precisar de o abrir outra vez, está aqui:\n"+LINK+"\n\nSe tiver alguma dúvida sobre a sua casa — preço, documentos ou custos, basta responder a este email ou falar comigo pelo WhatsApp: 931 921 450. Estou disponível para ajudar, sem compromisso.\n\nEduardo Alves\nConsultor imobiliário · Zome · AMI 15325\nInstagram: @eduardoalves.imobiliario";
     go.disabled=true; go.firstChild.textContent='A enviar… ';
     f.submit();
