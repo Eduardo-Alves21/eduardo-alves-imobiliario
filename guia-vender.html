@@ -107,34 +107,28 @@
       <img class="cover" src="assets/capa-guia-vender.webp" alt="Capa do guia" width="909" height="1287">
       <div><small>O que vai encontrar</small><ul><li>Como se define o preço certo (e porque um preço alto afasta compradores)</li><li>A lista para preparar a casa antes das fotografias</li><li>Os documentos que tem de ter — e os que mais atrasam vendas</li><li>O que sai do valor que vai receber</li><li>O caminho do anúncio à escritura, passo a passo</li><li>Os 5 erros mais caros que vejo repetir-se</li></ul></div>
     </div>
-    <div class="author"><img src="assets/eduardo-blazer.webp" alt=""><div><b>Eduardo Alves</b><span>Consultor imobiliário · Zome · AMI 15325 · Gondomar</span></div></div>
+    <div class="author"><img src="assets/eduardo-blazer.webp" alt=""><div><b>Eduardo Alves</b><span>Consultor imobiliário · Zome Boavista · AMI 15325</span></div></div>
   </div>
 
   <div class="card" id="card">
     <div class="formwrap">
       <h2>Receba o guia <em>gratuito.</em></h2>
-      <p class="hint">Deixe os seus dados, confirme que não é um robô e o download começa. Também lho envio por email.</p>
-      <form id="lead" action="https://formsubmit.co/eduardo.alves@zome.pt" method="POST" novalidate>
-        <input type="hidden" name="_subject" value="Novo lead: download do guia para VENDER">
-        <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_next" value="https://eduardo-alves21.github.io/eduardo-alves-imobiliario/guia-vender.html?ok=1#card">
-        <input type="hidden" name="Origem" value="Guia para vender casa">
-        <input type="hidden" name="_autoresponse" id="auto" value="">
-        <div class="f"><label for="nome">Nome</label><input id="nome" name="Nome" autocomplete="name" required></div>
-        <div class="f"><label for="tel">Telemóvel</label><input id="tel" name="Telemóvel" type="tel" inputmode="tel" autocomplete="tel" required></div>
+      <p class="hint">Deixe os seus dados e envio-lhe o guia por email, em poucos segundos.</p>
+      <form id="lead" novalidate>
+        <div class="f"><label for="nome">Nome</label><input id="nome" name="nome" autocomplete="name" required></div>
+        <div class="f"><label for="tel">Telemóvel</label><input id="tel" name="telemovel" type="tel" inputmode="tel" autocomplete="tel" required></div>
         <div class="f"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required></div>
-        <label class="consent" id="consentBox"><input type="checkbox" id="rgpd" name="Consentimento RGPD" value="Sim" required><span>Autorizo o Eduardo Alves (consultor Zome) a usar estes dados para me enviar o guia e me contactar sobre o tema. <a href="privacidade.html">Política de privacidade</a>.</span></label>
-        <p class="err" id="err">Não consegui enviar agora — mas o seu guia já está a descarregar.</p>
-        <button class="btn" type="submit" id="go">Descarregar o guia grátis <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12M6 11l6 6 6-6M5 20h14"/></svg></button>
+        <label class="consent" id="consentBox"><input type="checkbox" id="rgpd" name="rgpd" value="Sim" required><span>Autorizo o Eduardo Alves (consultor Zome) a usar estes dados para me enviar o guia e me contactar sobre o tema. <a href="privacidade.html">Política de privacidade</a>.</span></label>
+        <p class="err" id="err">Não consegui enviar o guia agora. Tente de novo dentro de momentos ou peça-mo pelo <a href="https://wa.me/351931921450" target="_blank" rel="noopener">WhatsApp</a>.</p>
+        <button class="btn" type="submit" id="go">Receber o guia por email <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg></button>
         <div class="meta"><span>9 páginas · PDF</span><span>Sem spam</span></div>
       </form>
     </div>
     <div class="ok" aria-live="polite">
       <div class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></div>
-      <h2>Obrigado! <em>Boa leitura.</em></h2>
-      <p>O download deve ter começado. Se não começou, use o botão abaixo. Enviei-lhe também o link por email.</p>
-      <a class="btn" href="guias/guia-vender-casa-eduardo-alves.pdf" download="Guia-Vender-Casa-Eduardo-Alves.pdf" id="dl">Abrir o guia (PDF)</a>
-      <a class="alt" href="https://wa.me/351931921450?text=Ol%C3%A1%20Eduardo%2C%20descarreguei%20o%20seu%20guia%20e%20tenho%20uma%20d%C3%BAvida." target="_blank" rel="noopener">Tem uma dúvida? Fale comigo no WhatsApp →</a>
+      <h2>Está a caminho! <em>Veja o seu email.</em></h2>
+      <p>Enviei o guia para <b id="sentTo"></b>. Deve chegar dentro de um minuto — se não o encontrar, veja também no Spam ou em Promoções.</p>
+      <a class="alt" href="https://wa.me/351931921450?text=Ol%C3%A1%20Eduardo%2C%20pedi%20o%20seu%20guia%20e%20tenho%20uma%20d%C3%BAvida." target="_blank" rel="noopener">Tem uma dúvida? Fale comigo no WhatsApp →</a>
     </div>
   </div>
 </main>
@@ -151,11 +145,8 @@
 
 <script>
 (function(){
-  var f=document.getElementById('lead'),card=document.getElementById('card'),go=document.getElementById('go');
-  var PDF='guias/guia-vender-casa-eduardo-alves.pdf', FNAME='Guia-Vender-Casa-Eduardo-Alves.pdf', LINK='https://eduardo-alves21.github.io/eduardo-alves-imobiliario/guias/guia-vender-casa-eduardo-alves.pdf';
-  function download(){var a=document.createElement('a');a.href=PDF;a.download=FNAME;document.body.appendChild(a);a.click();a.remove();}
-  // de volta do FormSubmit (depois da verificação): mostrar agradecimento e descarregar
-  if(/[?&]ok=1/.test(location.search)){ card.classList.add('done'); setTimeout(download,600); }
+  var f=document.getElementById('lead'),card=document.getElementById('card'),go=document.getElementById('go'),err=document.getElementById('err');
+  var ENDPOINT='https://script.google.com/macros/s/AKfycbwnjnsR6YT5jI-A0Q4SEEZZhwn7wDkmK2qCnFLtfIjG8D-eSfxYlyBusdIUFNOIA2FF/exec', GUIA='vender', T0=Date.now();
   f.addEventListener('input',function(e){var b=e.target.closest('.f');if(b)b.classList.remove('bad')});
   document.getElementById('rgpd').addEventListener('change',function(){document.getElementById('consentBox').classList.remove('bad')});
   f.addEventListener('submit',function(e){
@@ -164,14 +155,21 @@
     function mark(el,ok,msg){var box=el.closest('.f')||document.getElementById('consentBox');box.classList.toggle('bad',!ok);
       if(box.classList.contains('f')){var m=box.querySelector('.m');if(!m){m=document.createElement('div');m.className='m';box.appendChild(m)}m.textContent=msg}
       if(!ok&&!first)first=el;}
-    mark(f.Nome,f.Nome.value.trim().length>=2,'Escreva o seu nome.');
-    mark(f['Telemóvel'],f['Telemóvel'].value.replace(/\D/g,'').length>=9,'Escreva um número de telemóvel válido (9 algarismos).');
+    mark(f.nome,f.nome.value.trim().length>=2,'Escreva o seu nome.');
+    mark(f.telemovel,f.telemovel.value.replace(/\D/g,'').length>=9,'Escreva um número de telemóvel válido (9 algarismos).');
     mark(f.email,/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.value.trim()),'Escreva um email válido — é para lá que envio o guia.');
     mark(document.getElementById('rgpd'),document.getElementById('rgpd').checked,'');
     if(first){first.scrollIntoView({block:'center',behavior:'smooth'});if(first.type!=='checkbox')first.focus({preventScroll:true});return}
-    document.getElementById('auto').value="Olá "+f.Nome.value.trim().split(' ')[0]+",\n\nObrigado por descarregar o guia «Vender a sua casa sem perder dinheiro nem tempo». Se precisar de o abrir outra vez, está aqui:\n"+LINK+"\n\nSe tiver alguma dúvida sobre a sua casa — preço, documentos ou custos, basta responder a este email ou falar comigo pelo WhatsApp: 931 921 450. Estou disponível para ajudar, sem compromisso.\n\nEduardo Alves\nConsultor imobiliário · Zome · AMI 15325\nInstagram: @eduardoalves.imobiliario";
-    go.disabled=true; go.firstChild.textContent='A enviar… ';
-    f.submit();
+    err.style.display='none';
+    go.disabled=true; var label=go.firstChild.textContent; go.firstChild.textContent='A enviar o seu guia… ';
+    var body=new URLSearchParams({guia:GUIA,nome:f.nome.value.trim(),telemovel:f.telemovel.value.trim(),email:f.email.value.trim(),rgpd:'Sim',t:String(Date.now()-T0),pagina:location.pathname.split('/').pop()});
+    fetch(ENDPOINT,{method:'POST',body:body})
+      .then(function(r){return r.json()})
+      .then(function(j){
+        if(j&&j.ok){document.getElementById('sentTo').textContent=f.email.value.trim();card.classList.add('done');card.scrollIntoView({block:'center'});}
+        else throw new Error(j&&j.motivo);
+      })
+      .catch(function(){err.style.display='block';go.disabled=false;go.firstChild.textContent=label;});
   });
 })();
 </script>
