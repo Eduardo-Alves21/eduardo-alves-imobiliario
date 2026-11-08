@@ -354,6 +354,14 @@ footer{background:var(--navy);color:#B9C3CC;padding:110px 0 36px;overflow:hidden
 .gcard .gcta{margin-top:auto;font-weight:500;font-size:14.5px;color:var(--navy);transition:color .3s}
 .gcard:hover .gcta{color:var(--pink)}
 .gcard:first-child{background:var(--navy);color:#fff}.gcard:first-child p{color:#B9C3CC}.gcard:first-child .gcta{color:#fff}
+.gbook{flex-direction:row;align-items:center;gap:28px;min-height:auto;padding:30px}
+.gbook img{width:130px;flex:none;border-radius:5px;box-shadow:0 18px 36px rgba(2,36,58,.28);transform:rotate(-3deg);transition:transform .6s var(--ease)}
+.gbook:hover img{transform:rotate(0) scale(1.05)}
+.gbook>div{display:flex;flex-direction:column;gap:10px;align-self:stretch}
+.gbook h3{font-size:27px}
+.wahint{margin:26px 0 0;font-size:14.5px;color:var(--ink2)}
+.wahint a{color:var(--navy);font-weight:500;text-decoration-color:var(--pink);text-underline-offset:3px}
+@media (max-width:640px){.gbook{flex-direction:column;align-items:flex-start}.gbook img{width:110px}}
 .fcontacts{display:flex;gap:28px;flex-wrap:wrap;margin:0 0 30px;font-size:15px}
 .fcontacts a{text-decoration:none;color:#fff}.fcontacts a:hover{color:var(--pink)}
 .wa{position:fixed;right:22px;bottom:22px;z-index:95;width:58px;height:58px;border-radius:50%;background:#25D366;display:grid;place-items:center;box-shadow:0 10px 26px rgba(0,0,0,.22);transition:transform .4s var(--ease)}
@@ -452,7 +460,7 @@ footer{background:var(--navy);color:#B9C3CC;padding:110px 0 36px;overflow:hidden
       <a href="#comprar" data-scroll><span>Comprar</span><small>02</small></a>
       <a href="#zonas" data-scroll><span>Zonas</span><small>03</small></a>
       <a href="#sobre" data-scroll><span>Sobre mim</span><small>04</small></a>
-      <a href="#guias" data-scroll><span>Ajuda grátis</span><small>05</small></a>
+      <a href="#guias" data-scroll><span>Guias grátis</span><small>05</small></a>
       <a href="#contacto" data-scroll><span><em>Contacto</em></span><small>06</small></a>
     </nav>
   </div>
@@ -618,12 +626,13 @@ footer{background:var(--navy);color:#B9C3CC;padding:110px 0 36px;overflow:hidden
 <!-- GUIAS -->
 <section class="guides" id="guias">
   <div class="wrap">
-    <div class="ghead"><div><span class="kicker rv">Ajuda gratuita</span><h2 class="h2 rv" style="margin-top:22px">Informação <em>antes de decidir.</em></h2></div>
-    <p class="muted rv rv-d1">Respostas práticas às dúvidas que mais ouço. Sem compromisso.</p></div>
+    <div class="ghead"><div><span class="kicker rv">Guias gratuitos</span><h2 class="h2 rv" style="margin-top:22px">Informação <em>antes de decidir.</em></h2></div>
+    <p class="muted rv rv-d1">Dois guias em PDF, com o essencial explicado sem siglas e com os números de 2026. Gratuitos.</p></div>
     <div class="gcards">
-      <a class="gcard rv" href="https://wa.me/351931921450?text=DOCUMENTOS" target="_blank" rel="noopener" data-cursor="WhatsApp"><span class="gtag">Lista</span><h3>Documentos <em>para vender</em></h3><p>Caderneta, certidão permanente, certificado energético e o resto. Veja comigo o que falta antes de anunciar.</p><span class="gcta">Enviar “DOCUMENTOS” no WhatsApp →</span></a>
-      <a class="gcard rv rv-d2" href="https://wa.me/351931921450?text=CUSTOS" target="_blank" rel="noopener" data-cursor="WhatsApp"><span class="gtag">Conta feita</span><h3>Quanto custa <em>vender?</em></h3><p>Comissão, certificado, crédito por liquidar, mais-valias. Faço-lhe a conta para a sua casa, sem compromisso.</p><span class="gcta">Enviar “CUSTOS” no WhatsApp →</span></a>
+      <a class="gcard gbook rv" href="guia-vender.html" data-cursor="Receber"><img src="assets/capa-guia-vender.webp" alt="Capa do guia para vender casa" loading="lazy"><div><span class="gtag">Para quem vende · PDF</span><h3>Vender a sua casa <em>sem perder dinheiro</em> nem tempo</h3><p>Preço certo, preparação, documentos, custos e os 5 erros mais caros.</p><span class="gcta">Receber o guia grátis →</span></div></a>
+      <a class="gcard gbook rv rv-d1" href="guia-comprar.html" data-cursor="Receber"><img src="assets/capa-guia-comprar.webp" alt="Capa do guia da primeira casa" loading="lazy"><div><span class="gtag">Para quem compra · PDF</span><h3>A sua primeira casa, <em>sem surpresas</em></h3><p>Orçamento, IMT Jovem e garantia pública, custos reais e o caminho até às chaves.</p><span class="gcta">Receber o guia grátis →</span></div></a>
     </div>
+    <p class="wahint rv">Prefere uma resposta rápida? Envie <a href="https://wa.me/351931921450?text=DOCUMENTOS" target="_blank" rel="noopener">DOCUMENTOS</a> ou <a href="https://wa.me/351931921450?text=CUSTOS" target="_blank" rel="noopener">CUSTOS</a> no WhatsApp e eu respondo-lhe.</p>
   </div>
 </section>
 
@@ -920,6 +929,9 @@ footer{background:var(--navy);color:#B9C3CC;padding:110px 0 36px;overflow:hidden
 
   $('#y').textContent=new Date().getFullYear();
   setIntent('vender');
+  // links dos PDFs: ?intent=vender|comprar#contacto
+  var qi=(new URLSearchParams(location.search)).get('intent');
+  if(qi==='vender'||qi==='comprar'){ setIntent(qi); showStep(2); }
 })();
 </script>
 </body>
