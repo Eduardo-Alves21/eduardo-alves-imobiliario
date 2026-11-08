@@ -295,6 +295,8 @@ form{background:var(--cream);color:var(--ink);border-radius:30px;padding:44px;po
 .back[hidden]{visibility:hidden;display:block}
 .consent{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;color:var(--ink2);margin:20px 0 0;line-height:1.5}
 .consent input{margin-top:3px;accent-color:var(--pink);width:16px;height:16px;flex:none}
+.fbad{font-size:12.5px;color:var(--pink-d);margin-top:5px;flex-basis:100%}
+.consent{flex-wrap:wrap}
 .hp{position:absolute;left:-9999px}
 
 /* ---------- FAQ ---------- */
@@ -710,7 +712,7 @@ footer{background:var(--navy);color:#B9C3CC;padding:110px 0 36px;overflow:hidden
         <p class="hint">Passo 3 de 3</p>
         <div class="fields">
           <div class="f"><label for="nome">Nome</label><input id="nome" name="Nome" autocomplete="name" required></div>
-          <div class="f"><label for="tel">Telemóvel</label><input id="tel" name="Telemóvel" type="tel" autocomplete="tel" inputmode="tel" pattern="[0-9 +]{9,16}" required></div>
+          <div class="f"><label for="tel">Telemóvel</label><input id="tel" name="Telemóvel" type="tel" autocomplete="tel" inputmode="tel" required></div>
           <div class="f full"><label for="email">Email <small>(opcional)</small></label><input id="email" name="email" type="email" autocomplete="email"></div>
           <div class="f full"><label for="msg">Mensagem <small>(opcional)</small></label><textarea id="msg" name="Mensagem" placeholder="Algo que eu deva saber?"></textarea></div>
         </div>
@@ -908,8 +910,20 @@ footer{background:var(--navy);color:#B9C3CC;padding:110px 0 36px;overflow:hidden
     next.firstChild.textContent=n===3?'Enviar pedido ':'Continuar ';
   }
   next.addEventListener('click',function(){
-    var step=fsteps[cur-1],bad=$$('input,select,textarea',step).filter(function(i){return !i.closest('[hidden]')&&!i.checkValidity()});
-    if(bad.length){bad[0].reportValidity();return}
+    var step=fsteps[cur-1],bad=$$('input,select,textarea',step).filter(function(i){
+      if(i.closest('[hidden]')||i.disabled) return false;
+      if(i.name==='Telemóvel') return i.value.replace(/\D/g,'').length<9;
+      return !i.checkValidity();
+    });
+    $$('.fbad',step).forEach(function(m){m.remove()});
+    if(bad.length){
+      bad.forEach(function(i){
+        var m=document.createElement('div');m.className='fbad';
+        m.textContent=i.type==='checkbox'?'Para continuar, marque esta autorização.':i.name==='Telemóvel'?'Escreva um número de telemóvel válido (9 algarismos).':i.type==='email'?'Escreva um email válido.':'Preencha este campo.';
+        (i.closest('.f')||i.closest('label')).appendChild(m);
+      });
+      bad[0].scrollIntoView({block:'center'}); return;
+    }
     if(cur<3){showStep(cur+1);var f=$('input:not([type=radio]):not([type=checkbox])',fsteps[cur-1]);if(f&&fine)setTimeout(function(){f.focus({preventScroll:true})},350)}
     else form.submit();
   });

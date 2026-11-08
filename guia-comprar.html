@@ -63,6 +63,9 @@
   .done .formwrap{display:none} .done .ok{display:block;animation:in .6s var(--ease)}
   @keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
   .err{display:none;font-size:13px;color:var(--pink-d);margin:-6px 0 14px}
+  .f .m{display:none;font-size:12.5px;color:var(--pink-d);margin-top:5px}
+  .f.bad input{border-color:var(--pink)} .f.bad .m{display:block}
+  .consent.bad{color:var(--pink-d)} .consent.bad input{outline:2px solid var(--pink);outline-offset:2px}
   .next{background:var(--cream);color:var(--navy);padding:80px 0}
   .next .wrap{display:flex;justify-content:space-between;align-items:center;gap:30px;flex-wrap:wrap}
   .next h3{font-family:Gelasio,Georgia,serif;font-weight:500;font-size:clamp(26px,3vw,38px);margin:0}
@@ -119,9 +122,9 @@
         <input type="hidden" name="_autoresponse" id="auto" value="">
         <p class="hp"><label>Não preencher: <input type="text" name="_honey" tabindex="-1" autocomplete="off"></label></p>
         <div class="f"><label for="nome">Nome</label><input id="nome" name="Nome" autocomplete="name" required></div>
-        <div class="f"><label for="tel">Telemóvel</label><input id="tel" name="Telemóvel" type="tel" inputmode="tel" autocomplete="tel" pattern="[0-9 +]{9,16}" required></div>
+        <div class="f"><label for="tel">Telemóvel</label><input id="tel" name="Telemóvel" type="tel" inputmode="tel" autocomplete="tel" required></div>
         <div class="f"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required></div>
-        <label class="consent"><input type="checkbox" id="rgpd" name="Consentimento RGPD" value="Sim" required><span>Autorizo o Eduardo Alves (consultor Zome) a usar estes dados para me enviar o guia e me contactar sobre o tema. <a href="privacidade.html">Política de privacidade</a>.</span></label>
+        <label class="consent" id="consentBox"><input type="checkbox" id="rgpd" name="Consentimento RGPD" value="Sim" required><span>Autorizo o Eduardo Alves (consultor Zome) a usar estes dados para me enviar o guia e me contactar sobre o tema. <a href="privacidade.html">Política de privacidade</a>.</span></label>
         <p class="err" id="err">Não consegui enviar agora — mas o seu guia já está a descarregar.</p>
         <button class="btn" type="submit" id="go">Descarregar o guia grátis <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12M6 11l6 6 6-6M5 20h14"/></svg></button>
         <div class="meta"><span>9 páginas · PDF</span><span>Sem spam</span></div>
@@ -154,10 +157,19 @@
   function download(){var a=document.createElement('a');a.href=PDF;a.download=FNAME;document.body.appendChild(a);a.click();a.remove();}
   // de volta do FormSubmit (depois da verificação): mostrar agradecimento e descarregar
   if(/[?&]ok=1/.test(location.search)){ card.classList.add('done'); setTimeout(download,600); }
+  f.addEventListener('input',function(e){var b=e.target.closest('.f');if(b)b.classList.remove('bad')});
+  document.getElementById('rgpd').addEventListener('change',function(){document.getElementById('consentBox').classList.remove('bad')});
   f.addEventListener('submit',function(e){
     e.preventDefault();
-    var bad=[].slice.call(f.querySelectorAll('input[required]')).filter(function(i){return !i.checkValidity()});
-    if(bad.length){bad[0].reportValidity();return}
+    var first=null;
+    function mark(el,ok,msg){var box=el.closest('.f')||document.getElementById('consentBox');box.classList.toggle('bad',!ok);
+      if(box.classList.contains('f')){var m=box.querySelector('.m');if(!m){m=document.createElement('div');m.className='m';box.appendChild(m)}m.textContent=msg}
+      if(!ok&&!first)first=el;}
+    mark(f.Nome,f.Nome.value.trim().length>=2,'Escreva o seu nome.');
+    mark(f['Telemóvel'],f['Telemóvel'].value.replace(/\D/g,'').length>=9,'Escreva um número de telemóvel válido (9 algarismos).');
+    mark(f.email,/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.value.trim()),'Escreva um email válido — é para lá que envio o guia.');
+    mark(document.getElementById('rgpd'),document.getElementById('rgpd').checked,'');
+    if(first){first.scrollIntoView({block:'center',behavior:'smooth'});if(first.type!=='checkbox')first.focus({preventScroll:true});return}
     if(f._honey.value) return;
     document.getElementById('auto').value="Olá "+f.Nome.value.trim().split(' ')[0]+",\n\nObrigado por descarregar o guia «A sua primeira casa, sem surpresas». Se precisar de o abrir outra vez, está aqui:\n"+LINK+"\n\nSe tiver alguma dúvida sobre a compra — orçamento, apoios ou custos, basta responder a este email ou falar comigo pelo WhatsApp: 931 921 450. Estou disponível para ajudar, sem compromisso.\n\nEduardo Alves\nConsultor imobiliário · Zome · AMI 15325\nInstagram: @eduardoalves.imobiliario";
     go.disabled=true; go.firstChild.textContent='A enviar… ';
